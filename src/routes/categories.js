@@ -1,22 +1,11 @@
 const express = require('express');
-const Category = require('../models/Category');
+const { createCategory, updateCategory, removeCategory } = require('../controllers/categories');
+const checkAuth = require('../utils/checkAuth');
 
 const router = express.Router();
 
-router.get('/', async(request, response) => {
-    const categories = await Category.find({});
-    response.json(categories);
-});
-
-router.post('/', async(request, response) => {
-    const { name } = request.body;
-
-    const newProduct = new Category({name});
-    const newProductSaved = await newProduct.save();
-    response.json(newProductSaved); 
-});
-
-//TODO: validate role:
-
+router.post('/', checkAuth, createCategory);
+router.put('/:id', checkAuth, updateCategory);
+router.delete('/:id', checkAuth, removeCategory);
 
 module.exports = router;
